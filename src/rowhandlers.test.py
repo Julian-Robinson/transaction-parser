@@ -14,6 +14,16 @@ class Test_RowHandlers(unittest.TestCase):
         self.assertEqual(result.transactionType, 'Debit')
         self.assertEqual(result.details, 'Details Particulars Code Reference')
 
+    def test_PrimaryProcessor_FallsBackToTypeIfNoDetailsArePResent(self):
+        # Type,Details,Particulars,Code,Reference,Amount,Date,ForeignCurrencyAmount,ConversionCharge
+        row = ['Interest','','','','','-100.20','06/08/2018','','']
+        sut = rowhandlers.PrimaryAccountProcessor()
+        result = sut.ToOutputRow(row)
+
+        self.assertEqual(result.date.isoformat(), '2018-08-06')
+        self.assertEqual(result.amount, -100.20)
+        self.assertEqual(result.transactionType, 'Debit')
+        self.assertEqual(result.details, 'Interest')
         
     def test_CreditProcessor_MapsFieldsToOutputRow(self):
         # Card,Type,Amount,Details,TransactionDate,ProcessedDate,ForeignCurrencyAmount,ConversionCharge

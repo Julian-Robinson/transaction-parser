@@ -28,6 +28,8 @@ def IndexOrNegativeOne(array, value):
 class PrimaryAccountProcessor:
     def ToOutputRow(self, row):
         details = f'{row[1]} {row[2]} {row[3]} {row[4]}'
+        if not details.strip():
+            details = row[0]
         amount = float(row[5])
         transactionType = 'Credit' if amount > 0 else 'Debit'
         transdate = datetime.strptime(row[6],'%d/%m/%Y').date()
